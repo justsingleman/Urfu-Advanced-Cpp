@@ -1,96 +1,108 @@
 #include "matrix.hpp"
-
+#include <vector>
 #include <stdexcept>
 
-Matrix::Matrix(int numRows, int numCols)
+class Matrix
 {
-using namespace std;
-
-Matrix::Matrix(int rows, int cols) {
-    if (rows < 0 || cols < 0) {
-        throw out_of_range("");
+public:
+    Matrix() = default;
+    Matrix(int numRows, int numCols)
+    {
+        Reset(numRows, numCols);
     }
-    if (rows == 0 || cols == 0) {
-        num_rows = 0;
-        num_cols = 0;
-        data.clear();
-    } else {
-        num_rows = rows;
-        num_cols = cols;
-        data.assign(rows, vector<int>(cols, 0));
-    }
-}
 
-void Matrix::Reset(int numRows, int numCols)
-{
-void Matrix::Reset(int rows, int cols) {
-    if (rows < 0 || cols < 0) {
-        throw out_of_range("");
-    }
-    if (rows == 0 || cols == 0) {
-        num_rows = 0;
-        num_cols = 0;
-        data.clear();
-    } else {
-        num_rows = rows;
-        num_cols = cols;
-        data.assign(rows, vector<int>(cols, 0));
-    }
-}
-
-int& Matrix::At(int row, int col)
-{
-int Matrix::At(int row, int col) const {
-    if (row < 0 || row >= num_rows || col < 0 || col >= num_cols) {
-        throw out_of_range("");
-    }
-    return data[row][col];
-}
-
-const int& Matrix::At(int row, int col) const
-{
-int& Matrix::At(int row, int col) {
-    if (row < 0 || row >= num_rows || col < 0 || col >= num_cols) {
-        throw out_of_range("");
-    }
-    return data[row][col];
-}
-
-int Matrix::GetRows() const
-{
-int Matrix::GetRows() const {
-    return num_rows;
-}
-
-int Matrix::GetCols() const
-{
-int Matrix::GetCols() const {
-    return num_cols;
-}
-
-bool Matrix::operator==(const Matrix& m2)
-{
-bool operator==(const Matrix& lhs, const Matrix& rhs) {
-    return lhs.num_rows == rhs.num_rows && lhs.num_cols == rhs.num_cols && lhs.data == rhs.data;
-}
-
-bool Matrix::operator!=(const Matrix& m2)
-{
-bool operator!=(const Matrix& lhs, const Matrix& rhs) {
-    return !(lhs == rhs);
-}
-
-Matrix Matrix::operator+(const Matrix& m2)
-{
-Matrix operator+(const Matrix& lhs, const Matrix& rhs) {
-    if (lhs.GetRows() != rhs.GetRows() || lhs.GetCols() != rhs.GetCols()) {
-        throw invalid_argument("");
-    }
-    Matrix result(lhs.GetRows(), lhs.GetCols());
-    for (int i = 0; i < lhs.GetRows(); ++i) {
-        for (int j = 0; j < lhs.GetCols(); ++j) {
-            result.At(i, j) = lhs.At(i, j) + rhs.At(i, j);
+    void Reset(int numRows, int numCols)
+    {
+        if (numRows <= 0 || numCols <= 0) {
+            rows = 0;
+            cols = 0;
+            matrix.clear();
+        }
+        else {
+            rows = numRows;
+            cols = numCols;
+            matrix.resize(rows, std::vector<int>(cols, 0));  // инициализируем нулями
         }
     }
-    return result;
+
+    int& At(int row, int col)
+    {
+        if (row < 0 || row >= rows || col < 0 || col >= cols) {
+            throw std::out_of_range("Index out of range");
+        }
+        return matrix[row][col];
+    }
+
+    const int& At(int row, int col) const
+    {
+        if (row < 0 || row >= rows || col < 0 || col >= cols) {
+            throw std::out_of_range("Index out of range");
+        }
+        return matrix[row][col];
+    }
+
+    int GetRows() const
+    {
+        return rows;
+    }
+
+    int GetCols() const
+    {
+        return cols;
+    }
+
+    bool operator==(const Matrix& m2)
+    {
+        if (rows != m2.rows || cols != m2.cols) return false;
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                if (matrix[i][j] != m2.matrix[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    bool operator!=(const Matrix& m2)
+    {
+        return !(*this == m2);
+    }
+
+    Matrix operator+(const Matrix& m2)
+    {
+        if (rows != m2.rows || cols != m2.cols) {
+            throw std::invalid_argument("Matrix sizes do not match for addition");
+        }
+        Matrix result(rows, cols);
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                result.At(i, j) = this->At(i, j) + m2.At(i, j);
+            }
+        }
+        return result;
+    }
+
+private:
+    int rows = 0;
+    int cols = 0;
+    std::vector<std::vector<int>> matrix;
+};
+
+// Пример использования:
+int main() {
+    Matrix m1(2, 3);
+    Matrix m2(2, 3);
+    //m1.Reset(0,0);
+    m1.At(0, 0) = 1;
+    m1.At(0, 1) = 2;
+    m1.At(0, 2) = 3;
+
+    m2.At(0, 0) = 4;
+    m2.At(0, 1) = 5;
+    m2.At(0, 2) = 6;
+
+    Matrix m3 = m1 + m2;
+
+    return 0;
 }
