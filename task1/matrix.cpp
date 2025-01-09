@@ -54,7 +54,7 @@ bool Matrix::operator==(const Matrix& m2) const
                 return false;
             }
         }
-    }
+    } 
     return true;
 }
 
