@@ -32,7 +32,7 @@ FigureType Triangle::Type() const {
 double Triangle::Perimeter() const {
     return a_ + b_ + c_;
 }
-
+ 
 double Triangle::Area() const {
     double s = Perimeter() / 2;
     return std::sqrt(s * (s - a_) * (s - b_) * (s - c_));
