@@ -70,6 +70,4 @@ std::unique_ptr<Figure> make_figure(FigureType type, double a, double b, double 
         throw std::invalid_argument("Unknown figure type");
     }
 }
-int main() {
- 
-}
+
