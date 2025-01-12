@@ -1,55 +1,34 @@
 #include "circular_queue.hpp"
-#include <vector>
-CircularQueue::CircularQueue(size_t size)
-{
-CircularQueue::CircularQueue(size_t size) : capacity(size), size(0), front(0), rear(0) {
-    buffer.resize(size);
-}
-bool CircularQueue::Push(int value)
-{
-    // your implementation here
-bool CircularQueue::Push(int value) {
-    if (Full()) {
-        return false;
+#include <iostream>
+
+int main() {
+    CircularQueue queue(5);
+
+    // Добавляем элементы
+    queue.Push(1);
+    queue.Push(2);
+    queue.Push(3);
+    queue.Push(4);
+    queue.Push(5);
+
+    std::cout << "Front: " << queue.Front() << std::endl; 
+    std::cout << "Back: " << queue.Back() << std::endl;   
+
+    // Попробуем добавить еще один элемент (должно вернуть false)
+    if (!queue.Push(6)) {
+        std::cout << "Queue is full!" << std::endl; 
     }
-    buffer[rear] = value;
-    rear = (rear + 1) % capacity;
-    size++;
-    return true;
-}
-bool CircularQueue::Pop()
-{
-bool CircularQueue::Pop() {
-    if (Empty()) {
-        return false;
-    }
-    front = (front + 1) % capacity;
-    size--;
-    return true;
-}
-int CircularQueue::Front() const
-{
-int CircularQueue::Front() const {
-    if (Empty()) {
-        return -1;
-    }
-    return buffer[front];
-}
-int CircularQueue::Back() const
-{
-int CircularQueue::Back() const {
-    if (Empty()) {
-        return -1;
-    }
-    return buffer[(rear - 1 + capacity) % capacity];
-}
-bool CircularQueue::Empty() const
-{
-bool CircularQueue::Empty() const {
-    return size == 0;
-}
-bool CircularQueue::Full() const
-{
-bool CircularQueue::Full() const {
-    return size == capacity;
+
+    // Удаляем элементы
+    queue.Pop();
+    queue.Pop();
+
+    std::cout << "Front: " << queue.Front() << std::endl; 
+    std::cout << "Back: " << queue.Back() << std::endl;  
+
+    // Добавляем новый элемент
+    queue.Push(6); 
+    std::cout << "Back after adding 6: " << queue.Back() << std::endl; 
+
+    return 0;
 }
